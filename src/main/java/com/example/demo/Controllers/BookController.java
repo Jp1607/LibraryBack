@@ -1,12 +1,10 @@
 package com.example.demo.Controllers;
 import com.example.demo.Services.BookService;
 import com.example.demo.Entities.Book;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/book")
@@ -15,18 +13,14 @@ public class BookController {
     HttpStatus httpStatus;
 
     @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
     BookService bookService;
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getBooks(@RequestParam(value = "title", required = false) String title) {
         try {
-            List<Book> booksList = bookService.getBookByTitle(title);
-            String bookListAsString = objectMapper.writeValueAsString(booksList);
+            String booksList = bookService.getBookByTitle(title);
             httpStatus = HttpStatus.OK;
-            return ResponseEntity.status(httpStatus.value()).body(bookListAsString);
+            return ResponseEntity.status(httpStatus.value()).body(booksList);
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             return ResponseEntity.status(httpStatus.value()).body(e.getMessage());
@@ -34,7 +28,7 @@ public class BookController {
     }
 
     @PostMapping(value = "", produces = "text/plain")
-    public ResponseEntity<String> newBook(@RequestBody(required = true) Book book) {
+    public ResponseEntity<String> newBook(@RequestBody() Book book) {
         try {
             bookService.addBook(book);
             httpStatus = HttpStatus.OK;
@@ -45,14 +39,26 @@ public class BookController {
         }
     }
 
-    @PutMapping(value = "", produces = "text/plain")
-public ResponseEntity<String> editBook(@RequestBody(required = true) Book book){
+    @PutMapping(value = "/edit", produces = "text/plain")
+    public ResponseEntity<String> editBook(@RequestBody() Book book) {
         try {
-     bookService.editBook(book);
-     httpStatus = HttpStatus.OK;
-     return ResponseEntity.status(httpStatus.value()).body("Livro editado com sucesso!");
+            bookService.editBook(book);
+            httpStatus = HttpStatus.OK;
+            return ResponseEntity.status(httpStatus.value()).body("Livro editado com sucesso!");
         } catch (Exception e) {
-        httpStatus = HttpStatus.OK;
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            return ResponseEntity.status(httpStatus.value()).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(value = "/exclude", produces = "text/plain")
+    public ResponseEntity<String> excludeBook(@RequestParam(value = "patrimonial_id") Long id) {
+        try {
+            bookService.excludeBook(id);
+            httpStatus = HttpStatus.OK;
+            return ResponseEntity.status(httpStatus.value()).body("livro excluído com sucesso!");
+        } catch (Exception e) {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             return ResponseEntity.status(httpStatus.value()).body(e.getMessage());
         }
     }
