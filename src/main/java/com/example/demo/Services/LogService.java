@@ -1,5 +1,5 @@
 package com.example.demo.Services;
-import Enums.Activity;
+import com.example.demo.Enums.Activity;
 import com.example.demo.Entities.Book;
 import com.example.demo.Entities.Log;
 import com.example.demo.Entities.Student;

@@ -1,5 +1,5 @@
 package com.example.demo.Entities;
-import Enums.Activity;
+import com.example.demo.Enums.Activity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

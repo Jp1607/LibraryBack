@@ -1,4 +1,4 @@
-package Enums;
+package com.example.demo.Enums;
 
 public enum Activity {
     NEW("adicionou"),
