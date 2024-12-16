@@ -1,17 +1,13 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.Entities.BorrowedBook;
-import com.example.demo.Repositories.BorrowedBookRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.Entities.User;
+import com.example.demo.Services.BorrowedBookService;
+import com.example.demo.Services.DateService;
+import com.example.demo.Services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 //Controller da entrada/empréstimo
 //e saída/devolução de livros.
@@ -23,24 +19,36 @@ public class BookFlowController {
     String body;
 
     @Autowired
-    BorrowedBookRepository borrowedBookRepository;
+    BorrowedBookService borrowedBookService;
+    StudentService studentService;
+    DateService dateService;
 
     //Retorna uma lista do histórico de movimentação
     //Will accept sorting in future
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getBookFlowList() {
         try {
-            List<BorrowedBook> borrowedBookList = borrowedBookRepository.findAll();
-            ObjectMapper objectMapper = new ObjectMapper();
-            body = objectMapper.writeValueAsString(borrowedBookList);
+            body = borrowedBookService.getStringfiedBookList();
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {
-            e.printStackTrace();
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             body = e.getMessage();
             return ResponseEntity.status(httpStatus).body(body);
         }
     }
 
-    @PostMapping
+    @PostMapping(produces = "text/plain")
+    public ResponseEntity<String> bookFlowAction(@RequestParam(value = "bookId") Long bookId,
+                                                 @RequestParam(value = "studentId") Long studentId) {
+        try {
+            User u = new User();
+            borrowedBookService.newBorrowedBook(bookId, studentService.getStudentById(studentId), u, dateService.getCurrentDate(), false);
+            body = "Livro emprestado com sucesso!";
+            return ResponseEntity.status(httpStatus).body(body);
+        } catch (Exception e) {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            body = e.getMessage();
+            return ResponseEntity.status(httpStatus).body(body);
+        }
+    }
 }

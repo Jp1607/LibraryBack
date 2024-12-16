@@ -26,6 +26,12 @@ public class BookService {
         }
     }
 
+    //Should have error handling
+    public Book getBookByPatrimonialId(Long id) {
+        return bookRepository.findByPatrimonialId(id);
+    }
+
+
     public void addBook(Book book) {
         bookRepository.save(book);
         User user = new User();
@@ -44,5 +50,15 @@ public class BookService {
         bookRepository.save(tempBook);
         User user = new User();
         logService.newLog(user, tempBook, null, dateService.getCurrentDate(), Activity.REMOVE);
+    }
+
+    public void markAsBorrowed(Book book){
+        book.setAvailable(false);
+        bookRepository.save(book);
+    }
+
+    public void markAsReturned(Book book){
+        book.setAvailable(true);
+        bookRepository.save(book);
     }
 }

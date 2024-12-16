@@ -1,8 +1,6 @@
 package com.example.demo.Entities;
-
 import jakarta.persistence.*;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "borrowed_book")
@@ -26,24 +24,36 @@ public class BorrowedBook {
     private User user;
 
     @Column(name = "borrow_date")
-    private Date borrowDate;
+    private LocalDateTime borrowDate;
 
-    public BorrowedBook(Book book, Student student, User user, Date borrowDate) {
+    @Column(name = "is_returned")
+    private Boolean isReturned;
+
+    public BorrowedBook(Book book, Student student, User user, LocalDateTime borrowDate, Boolean isReturned) {
         this.book = book;
         this.student = student;
         this.user = user;
         this.borrowDate = borrowDate;
+        this.isReturned = isReturned;
+    }
+
+    public Boolean getReturned() {
+        return isReturned;
+    }
+
+    public void setReturned(Boolean returned) {
+        isReturned = returned;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Date getBorrowDate() {
+    public LocalDateTime getBorrowDate() {
         return borrowDate;
     }
 
-    public void setBorrowDate(Date borrowDate) {
+    public void setBorrowDate(LocalDateTime borrowDate) {
         this.borrowDate = borrowDate;
     }
 
