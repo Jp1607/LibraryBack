@@ -1,5 +1,5 @@
-package com.example.demo.Entities;
-import com.example.demo.Enums.Activity;
+package com.example.demo.Model.Entities;
+import com.example.demo.Model.Enums.Activity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

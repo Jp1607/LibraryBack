@@ -1,10 +1,10 @@
 package com.example.demo.Services;
-import com.example.demo.Enums.Activity;
-import com.example.demo.Entities.Book;
-import com.example.demo.Entities.Log;
-import com.example.demo.Entities.Student;
-import com.example.demo.Entities.User;
-import com.example.demo.Repositories.LogRepository;
+import com.example.demo.Model.Enums.Activity;
+import com.example.demo.Model.Entities.Book;
+import com.example.demo.Model.Entities.Log;
+import com.example.demo.Model.Entities.Student;
+import com.example.demo.Model.Entities.User;
+import com.example.demo.Model.Repositories.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;

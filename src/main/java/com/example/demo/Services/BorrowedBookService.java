@@ -1,10 +1,10 @@
 package com.example.demo.Services;
-import com.example.demo.Entities.Book;
-import com.example.demo.Entities.BorrowedBook;
-import com.example.demo.Entities.Student;
-import com.example.demo.Entities.User;
-import com.example.demo.Enums.Activity;
-import com.example.demo.Repositories.BorrowedBookRepository;
+import com.example.demo.Model.Entities.Book;
+import com.example.demo.Model.Entities.BorrowedBook;
+import com.example.demo.Model.Entities.Student;
+import com.example.demo.Model.Entities.User;
+import com.example.demo.Model.Enums.Activity;
+import com.example.demo.Model.Repositories.BorrowedBookRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

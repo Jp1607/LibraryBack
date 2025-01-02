@@ -1,6 +1,6 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.Entities.User;
+import com.example.demo.Model.Entities.User;
 import com.example.demo.Services.BorrowedBookService;
 import com.example.demo.Services.DateService;
 import com.example.demo.Services.StudentService;
