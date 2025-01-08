@@ -1,6 +1,7 @@
 package com.library.Services;
 
 import com.library.Model.Entities.Student;
+import com.library.Model.Enums.Activity;
 import com.library.Model.Repositories.StudentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +14,17 @@ import java.util.NoSuchElementException;
 @Service
 public class StudentService extends PersonService<Student>{
 
-    @Autowired
     StudentRepository studentRepository;
     ObjectMapper objectMapper;
+    LogService logService;
+    String tableName = "students";
+
+    @Autowired
+    public StudentService(StudentRepository studentRepository, ObjectMapper objectMapper, LogService logService){
+        this.studentRepository = studentRepository;
+        this.objectMapper = objectMapper;
+        this.logService = logService;
+    }
 
     @Override
     public Student getById(Long id) {
@@ -35,23 +44,27 @@ public class StudentService extends PersonService<Student>{
         return objectMapper.writeValueAsString(getById(id));
     }
 
-    public Student save(Student student) {
-       return studentRepository.save(student);
+    public void save(Student student) {
+        logService.newLog(tableName, student.getId(), null, student, Activity.NEW);
+        studentRepository.save(student);
     }
 
     public void edit(Student student) {
+        logService.newLog(tableName, student.getId(), null, student, Activity.EDIT);
         studentRepository.save(student);
     }
 
     public void changeState(Long id) {
         Student student = getById(id);
         student.setActive(!student.getActive());
+        logService.newLog(tableName, student.getId(), null, student, Activity.STATE);
         studentRepository.save(student);
     }
 
     public void exclude(Long id) {
         Student student = getById(id);
         student.setActive(false);
+        logService.newLog(tableName, student.getId(), null, student, Activity.REMOVE);
         studentRepository.save(student);
     }
 }

@@ -1,7 +1,6 @@
 package com.library.Controllers;
 
 import com.library.Model.Entities.Parent;
-import com.library.Model.Enums.Activity;
 import com.library.Services.LogService;
 import com.library.Services.ParentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,13 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/parent")
 public class ParentController {
 
-    @Autowired
     ParentService parentService;
-    LogService logService;
-
     HttpStatus httpStatus = HttpStatus.OK;
     String body;
-    String tableName = "parents";
+
+    @Autowired
+    public ParentController(ParentService parentService){
+        this.parentService = parentService;
+    }
 
     @GetMapping("")
     public ResponseEntity<String> getParents(@RequestParam(required = false) Long id) {
@@ -48,7 +48,6 @@ public class ParentController {
 
         try {
             parentService.save(parent);
-            logService.newLog(tableName, parent.getId(), null, null, Activity.NEW);
             return ResponseEntity.status(httpStatus.value()).build();
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -62,7 +61,6 @@ public class ParentController {
 
         try {
             parentService.edit(parent);
-            logService.newLog(tableName, parent.getId(), null, null, Activity.EDIT);
             return ResponseEntity.status(httpStatus.value()).build();
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -77,7 +75,6 @@ public class ParentController {
 
         try {
             parentService.changeState(id);
-            logService.newLog(tableName, id, null, null, Activity.STATE);
             return ResponseEntity.status(httpStatus.value()).build();
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -91,7 +88,6 @@ public class ParentController {
 
         try {
             parentService.exclude(id);
-            logService.newLog(tableName, id, null, null, Activity.REMOVE);
             return ResponseEntity.status(httpStatus.value()).build();
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
