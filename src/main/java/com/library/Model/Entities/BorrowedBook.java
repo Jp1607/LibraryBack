@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "borrowed_book")
+@Table(name = "book_flow")
 public class BorrowedBook {
 
     @Id
@@ -12,7 +12,7 @@ public class BorrowedBook {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "book_id", referencedColumnName = "patrimonial_id")
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

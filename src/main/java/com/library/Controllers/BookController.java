@@ -28,7 +28,8 @@ public class BookController {
     }
 
     @PostMapping(value = "", produces = "text/plain")
-    public ResponseEntity<String> newBook(@RequestBody() Book book) {
+    public ResponseEntity<String> newBook(@RequestBody Book book) {
+        System.out.println(book.toString());
         try {
             bookService.addBook(book);
             httpStatus = HttpStatus.OK;
@@ -40,7 +41,7 @@ public class BookController {
     }
 
     @PutMapping(value = "/edit", produces = "text/plain")
-    public ResponseEntity<String> editBook(@RequestBody() Book book) {
+    public ResponseEntity<String> editBook(@RequestBody Book book) {
         try {
             bookService.editBook(book);
             httpStatus = HttpStatus.OK;

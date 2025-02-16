@@ -11,11 +11,18 @@ import java.util.List;
 @Service
 public class BookService {
 
-    @Autowired
-    DateService dateService;
     LogService logService;
     ObjectMapper objectMapper;
     BookRepository bookRepository;
+    DateService dateService;
+
+    @Autowired
+    public BookService(LogService logService, ObjectMapper objectMapper, BookRepository bookRepository, DateService dateService) {
+        this.logService = logService;
+        this.objectMapper = objectMapper;
+        this.bookRepository = bookRepository;
+        this.dateService = dateService;
+    }
 
     public String getBookByTitle(String title) {
         try {
@@ -33,23 +40,21 @@ public class BookService {
 
 
     public void addBook(Book book) {
+        System.out.print(book.toString());
         bookRepository.save(book);
-        User user = new User();
-        logService.newLog(user, book, null, dateService.getCurrentDate(), Activity.NEW);
+        logService.newLog("books", book.getId(), book, null, Activity.NEW);
     }
 
     public void editBook(Book book) {
         bookRepository.save(book);
-        User user = new User();
-        logService.newLog(user, book, null, dateService.getCurrentDate(), Activity.EDIT);
+        logService.newLog("books", book.getId(), book, null, Activity.EDIT);
     }
 
     public void excludeBook(Long id) {
         Book tempBook = bookRepository.findByPatrimonialId(id);
         tempBook.setExcluded(true);
         bookRepository.save(tempBook);
-        User user = new User();
-        logService.newLog(user, tempBook, null, dateService.getCurrentDate(), Activity.REMOVE);
+        logService.newLog("books", tempBook.getId(), tempBook, null, Activity.REMOVE);
     }
 
     public void markAsBorrowed(Book book){

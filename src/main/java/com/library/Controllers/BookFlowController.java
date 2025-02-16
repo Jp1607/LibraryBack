@@ -42,7 +42,7 @@ public class BookFlowController {
                                                  @RequestParam(value = "studentId") Long studentId) {
         try {
             User u = new User();
-            borrowedBookService.newBorrowedBook(bookId, studentService.getStudentById(studentId), u, dateService.getCurrentDate(), false);
+            borrowedBookService.newBorrowedBook(bookId, studentService.getById(studentId), u, dateService.getCurrentDate(), false);
             body = "Livro emprestado com sucesso!";
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {

@@ -37,6 +37,6 @@ public class BorrowedBookService {
         BorrowedBook borrowedBook = new BorrowedBook(book, student, user, localDateTime, isReturned);
         borrowedBookRepository.save(borrowedBook);
         bookService.markAsBorrowed(book);
-        logService.newLog(user, book, student, localDateTime, Activity.BORROW);
+        logService.newLog("book_flow", book.getId(), book, student, Activity.BORROW);
     }
 }

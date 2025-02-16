@@ -1,9 +1,10 @@
 package com.library.Model.Entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "book")
+@Table(name = "books")
 public class Book {
 
     @Id
@@ -21,23 +22,28 @@ public class Book {
     private String genre;
 
     @Column(name = "patrimonial_id")
-    private Integer patrimId;
+    private Integer patrimonialId;
 
     @Column(name = "shelf")
     private Integer shelf;
 
     @Column(name = "is_available")
-    private Boolean isAvailable;
+    @JsonProperty("isAvailable")
+    private boolean isAvailable;
 
     @Column(name = "is_excluded")
-    private Boolean isExcluded;
+    @JsonProperty("isExcluded")
+    private boolean isExcluded;
 
-    public Book(Long id, String title, String author, String genre, Integer patrimId, Integer shelf, Boolean isAvailable, Boolean isExcluded) {
+    public Book() {
+    }
+
+    public Book(Long id, String title, String author, String genre, Integer patrimonialId, Integer shelf, Boolean isAvailable, Boolean isExcluded) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.patrimId = patrimId;
+        this.patrimonialId = patrimonialId;
         this.shelf = shelf;
         this.isAvailable = isAvailable;
         this.isExcluded = isExcluded;
@@ -68,12 +74,8 @@ public class Book {
         this.shelf = shelf;
     }
 
-    public Integer getPatrimId() {
-        return patrimId;
-    }
-
     public void setPatrimId(Integer patrimId) {
-        this.patrimId = patrimId;
+        this.patrimonialId = patrimId;
     }
 
     public String getGenre() {
@@ -102,5 +104,31 @@ public class Book {
 
     public Long getId() {
         return this.id;
+    }
+
+    public Integer getPatrimonialId() {
+        return patrimonialId;
+    }
+
+    public void setPatrimonialId(Integer patrimonialId) {
+        this.patrimonialId = patrimonialId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", genre='" + genre + '\'' +
+                ", patrimonialId=" + patrimonialId +
+                ", shelf=" + shelf +
+                ", isAvailable=" + isAvailable +
+                ", isExcluded=" + isExcluded +
+                '}';
     }
 }
