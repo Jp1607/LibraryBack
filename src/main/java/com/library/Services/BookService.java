@@ -1,4 +1,5 @@
 package com.library.Services;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.library.Model.Enums.Activity;
 import com.library.Model.Entities.Book;
 import com.library.Model.Entities.User;
@@ -31,6 +32,10 @@ public class BookService {
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    public String getAll() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(bookRepository.findAll());
     }
 
     //Should have error handling

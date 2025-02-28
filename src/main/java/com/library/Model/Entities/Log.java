@@ -20,8 +20,8 @@ public class Log {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "book_id", referencedColumnName = "id", nullable = false, unique = false)
     private Book book;
 
     @Column(name = "date")

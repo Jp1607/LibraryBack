@@ -1,4 +1,5 @@
 package com.library.Controllers;
+
 import com.library.Services.BookService;
 import com.library.Model.Entities.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,12 @@ public class BookController {
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getBooks(@RequestParam(value = "title", required = false) String title) {
         try {
-            String booksList = bookService.getBookByTitle(title);
+            String booksList;
+            if (title != null) {
+                booksList = bookService.getBookByTitle(title);
+            } else {
+                booksList = bookService.getAll();
+            }
             httpStatus = HttpStatus.OK;
             return ResponseEntity.status(httpStatus.value()).body(booksList);
         } catch (Exception e) {

@@ -26,23 +26,11 @@ public class BorrowedBook {
     @Column(name = "borrow_date")
     private LocalDateTime borrowDate;
 
-    @Column(name = "is_returned")
-    private Boolean isReturned;
-
-    public BorrowedBook(Book book, Student student, User user, LocalDateTime borrowDate, Boolean isReturned) {
+    public BorrowedBook(Book book, Student student, User user, LocalDateTime borrowDate) {
         this.book = book;
         this.student = student;
         this.user = user;
         this.borrowDate = borrowDate;
-        this.isReturned = isReturned;
-    }
-
-    public Boolean getReturned() {
-        return isReturned;
-    }
-
-    public void setReturned(Boolean returned) {
-        isReturned = returned;
     }
 
     public Long getId() {

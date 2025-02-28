@@ -1,6 +1,7 @@
 package com.library.Controllers;
 
 import com.library.Model.Entities.User;
+import com.library.Model.Enums.BookFlowAction;
 import com.library.Services.BorrowedBookService;
 import com.library.Services.DateService;
 import com.library.Services.StudentService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 //Controller da entrada/empréstimo
 //e saída/devolução de livros.
@@ -42,7 +45,7 @@ public class BookFlowController {
                                                  @RequestParam(value = "studentId") Long studentId) {
         try {
             User u = new User();
-            borrowedBookService.newBorrowedBook(bookId, studentService.getById(studentId), u, dateService.getCurrentDate(), false);
+            borrowedBookService.borrowedBookAction(bookId, studentId, u);
             body = "Livro emprestado com sucesso!";
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {
