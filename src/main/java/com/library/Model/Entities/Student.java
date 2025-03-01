@@ -9,5 +9,13 @@ import jakarta.persistence.Table;
 public class Student extends Person{
 
     @Column(name = "class")
-    private Integer classRoom;
+    private Integer classroom;
+
+    public Integer getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(Integer classroom) {
+        this.classroom = classroom;
+    }
 }

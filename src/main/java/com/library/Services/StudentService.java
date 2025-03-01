@@ -45,13 +45,13 @@ public class StudentService extends PersonService<Student>{
     }
 
     public void save(Student student) {
-        logService.newLog(tableName, student.getId(), null, student, Activity.NEW);
         studentRepository.save(student);
+        logService.newLog(tableName, student.getId(), null, student, Activity.NEW);
     }
 
     public void edit(Student student) {
-        logService.newLog(tableName, student.getId(), null, student, Activity.EDIT);
         studentRepository.save(student);
+        logService.newLog(tableName, student.getId(), null, student, Activity.EDIT);
     }
 
     public void changeState(Long id) {

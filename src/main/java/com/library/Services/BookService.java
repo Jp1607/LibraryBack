@@ -1,4 +1,5 @@
 package com.library.Services;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.library.Model.Enums.Activity;
 import com.library.Model.Entities.Book;
@@ -7,7 +8,9 @@ import com.library.Model.Repositories.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class BookService {
@@ -27,8 +30,8 @@ public class BookService {
 
     public String getBookByTitle(String title) {
         try {
-        List<Book> bookList = bookRepository.findByTitle(title);
-        return objectMapper.writeValueAsString(bookList);
+            List<Book> bookList = bookRepository.findByTitle(title);
+            return objectMapper.writeValueAsString(bookList);
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -43,6 +46,9 @@ public class BookService {
         return bookRepository.findByPatrimonialId(id);
     }
 
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
 
     public void addBook(Book book) {
         System.out.print(book.toString());
@@ -62,12 +68,12 @@ public class BookService {
         logService.newLog("books", tempBook.getId(), tempBook, null, Activity.REMOVE);
     }
 
-    public void markAsBorrowed(Book book){
+    public void markAsBorrowed(Book book) {
         book.setAvailable(false);
         bookRepository.save(book);
     }
 
-    public void markAsReturned(Book book){
+    public void markAsReturned(Book book) {
         book.setAvailable(true);
         bookRepository.save(book);
     }

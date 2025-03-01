@@ -21,12 +21,22 @@ public class BorrowedBookService {
 
     ObjectMapper objectMapper;
 
-    @Autowired
     BorrowedBookRepository borrowedBookRepository;
     BookService bookService;
     StudentService studentService;
     LogService logService;
     DateService dateService;
+    UserService userService;
+
+    @Autowired
+    public BorrowedBookService(BorrowedBookRepository borrowedBookRepository, BookService bookService, StudentService studentService, LogService logService, DateService dateService, UserService userService) {
+        this.borrowedBookRepository = borrowedBookRepository;
+        this.bookService = bookService;
+        this.studentService = studentService;
+        this.logService = logService;
+        this.dateService = dateService;
+        this.userService = userService;
+    }
 
     //Will implement sorting
     public List<BorrowedBook> getBorrowedBookList() {
@@ -41,18 +51,21 @@ public class BorrowedBookService {
         return borrowedBookRepository.findByUserIdAndBookId(bookId, studentId);
     }
 
-    public void borrowedBookAction(Long bookId, Long studentId, User user) throws JsonProcessingException {
-        Book book = bookService.getBookByPatrimonialId(bookId);
+    public String borrowedBookAction(Long bookId, Long studentId) throws JsonProcessingException {
+        User user = userService.getUser(2L);
+        Book book = bookService.getBookById(bookId);
         Student student = studentService.getById(studentId);
         LocalDateTime localDateTime = dateService.getCurrentDate();
         if (getBorrowedBook(bookId, studentId).isPresent()) {
             BorrowedBook borrowedBook = getBorrowedBook(bookId, studentId).get();
             borrowedBookRepository.delete(borrowedBook);
             logService.newLog("book_flow", book.getId(), book, student, Activity.RETURN);
+            return "Livro devolvido com sucesso!";
         } else {
             BorrowedBook borrowedBook = new BorrowedBook(book, student, user, localDateTime);
             borrowedBookRepository.save(borrowedBook);
             logService.newLog("book_flow", book.getId(), book, student, Activity.BORROW);
+            return "Livro emprestado com sucesso!";
         }
     }
 }

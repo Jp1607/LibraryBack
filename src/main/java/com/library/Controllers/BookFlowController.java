@@ -44,9 +44,7 @@ public class BookFlowController {
     public ResponseEntity<String> bookFlowAction(@RequestParam(value = "bookId") Long bookId,
                                                  @RequestParam(value = "studentId") Long studentId) {
         try {
-            User u = new User();
-            borrowedBookService.borrowedBookAction(bookId, studentId, u);
-            body = "Livro emprestado com sucesso!";
+            body = borrowedBookService.borrowedBookAction(bookId, studentId);
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

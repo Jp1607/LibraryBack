@@ -17,7 +17,7 @@ public abstract class Person {
     private String surname;
 
     @Column(name = "contact")
-    private Integer contact;
+    private Long contact;
 
     @Column(name = "address")
     private String address;
@@ -48,11 +48,11 @@ public abstract class Person {
         this.surname = surname;
     }
 
-    public Integer getContact() {
+    public Long getContact() {
         return contact;
     }
 
-    public void setContact(Integer contact) {
+    public void setContact(Long contact) {
         this.contact = contact;
     }
 
