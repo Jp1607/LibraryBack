@@ -1,6 +1,7 @@
 package com.library.Model.Entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.library.Model.DTO.BookDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -29,13 +30,21 @@ public class Book {
 
     @Column(name = "is_available")
     @JsonProperty("isAvailable")
-    private boolean isAvailable;
+    private Boolean isAvailable;
 
     @Column(name = "is_excluded")
     @JsonProperty("isExcluded")
-    private boolean isExcluded;
+    private Boolean isExcluded;
 
     public Book() {
+    }
+
+    public Book(BookDTO bookDTO) {
+        this.author = bookDTO.getAuthor();;
+        this.genre = bookDTO.getGenre();
+        this.title = bookDTO.getTitle();
+        this.patrimonialId = bookDTO.getPatrimonialId();
+        this.shelf = bookDTO.getShelf();
     }
 
     public Book(Long id, String title, String author, String genre, Integer patrimonialId, Integer shelf, Boolean isAvailable, Boolean isExcluded) {
@@ -130,5 +139,16 @@ public class Book {
                 ", isAvailable=" + isAvailable +
                 ", isExcluded=" + isExcluded +
                 '}';
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void setValues() {
+        if(this.isAvailable == null) {
+            this.isAvailable = true;
+        }
+        if(this.isExcluded == null) {
+            this.isExcluded = false;
+        }
     }
 }

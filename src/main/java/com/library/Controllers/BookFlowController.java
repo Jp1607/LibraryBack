@@ -1,7 +1,4 @@
 package com.library.Controllers;
-
-import com.library.Model.Entities.User;
-import com.library.Model.Enums.BookFlowAction;
 import com.library.Services.BorrowedBookService;
 import com.library.Services.DateService;
 import com.library.Services.StudentService;
@@ -9,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 //Controller da entrada/empréstimo
 //e saída/devolução de livros.

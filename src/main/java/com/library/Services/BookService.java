@@ -1,6 +1,7 @@
 package com.library.Services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.library.Model.DTO.BookDTO;
 import com.library.Model.Enums.Activity;
 import com.library.Model.Entities.Book;
 import com.library.Model.Entities.User;
@@ -31,6 +32,7 @@ public class BookService {
     public String getBookByTitle(String title) {
         try {
             List<Book> bookList = bookRepository.findByTitle(title);
+            bookList = bookList.stream().filter(book -> !book.getExcluded()).toList();
             return objectMapper.writeValueAsString(bookList);
         } catch (Exception e) {
             return e.getMessage();
@@ -50,19 +52,19 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    public void addBook(Book book) {
-        System.out.print(book.toString());
+    public void addBook(BookDTO bookDTO) {
+        Book book = new Book(bookDTO);
         bookRepository.save(book);
         logService.newLog("books", book.getId(), book, null, Activity.NEW);
     }
 
     public void editBook(Book book) {
-        bookRepository.save(book);
-        logService.newLog("books", book.getId(), book, null, Activity.EDIT);
+        Book returnBook = bookRepository.save(book);
+        logService.newLog("books", returnBook.getId(), returnBook, null, Activity.EDIT);
     }
 
     public void excludeBook(Long id) {
-        Book tempBook = bookRepository.findByPatrimonialId(id);
+        Book tempBook = bookRepository.findById(id).get();
         tempBook.setExcluded(true);
         bookRepository.save(tempBook);
         logService.newLog("books", tempBook.getId(), tempBook, null, Activity.REMOVE);

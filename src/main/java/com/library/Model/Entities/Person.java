@@ -23,10 +23,10 @@ public abstract class Person {
     private String address;
 
     @Column(name = "active")
-    private Boolean active;
+    private boolean active;
 
     @Column(name = "excluded")
-    private Boolean excluded;
+    private boolean excluded;
 
     public Long getId() {
         return id;

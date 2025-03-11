@@ -48,22 +48,24 @@ public class BorrowedBookService {
     }
 
     public Optional<BorrowedBook> getBorrowedBook(Long bookId, Long studentId) throws JsonProcessingException {
-        return borrowedBookRepository.findByUserIdAndBookId(bookId, studentId);
+        return borrowedBookRepository.findByStudentIdAndBookId(studentId, bookId);
     }
 
     public String borrowedBookAction(Long bookId, Long studentId) throws JsonProcessingException {
-        User user = userService.getUser(2L);
+        User user = userService.getUserByCred("admin", "123456");
         Book book = bookService.getBookById(bookId);
         Student student = studentService.getById(studentId);
         LocalDateTime localDateTime = dateService.getCurrentDate();
         if (getBorrowedBook(bookId, studentId).isPresent()) {
             BorrowedBook borrowedBook = getBorrowedBook(bookId, studentId).get();
             borrowedBookRepository.delete(borrowedBook);
+            bookService.markAsReturned(book);
             logService.newLog("book_flow", book.getId(), book, student, Activity.RETURN);
             return "Livro devolvido com sucesso!";
         } else {
             BorrowedBook borrowedBook = new BorrowedBook(book, student, user, localDateTime);
             borrowedBookRepository.save(borrowedBook);
+            bookService.markAsBorrowed(book);
             logService.newLog("book_flow", book.getId(), book, student, Activity.BORROW);
             return "Livro emprestado com sucesso!";
         }

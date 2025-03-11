@@ -1,5 +1,6 @@
 package com.library.Controllers;
 
+import com.library.Model.DTO.BookDTO;
 import com.library.Services.BookService;
 import com.library.Model.Entities.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/book")
+@RequestMapping(value = "/books")
 public class BookController {
 
     HttpStatus httpStatus;
@@ -34,10 +35,10 @@ public class BookController {
     }
 
     @PostMapping(value = "", produces = "text/plain")
-    public ResponseEntity<String> newBook(@RequestBody Book book) {
-        System.out.println(book.toString());
+    public ResponseEntity<String> newBook(@RequestBody BookDTO bookDTO) {
+
         try {
-            bookService.addBook(book);
+            bookService.addBook(bookDTO);
             httpStatus = HttpStatus.OK;
             return ResponseEntity.status(httpStatus.value()).body("Livro salvo com sucesso!");
         } catch (Exception e) {
@@ -59,7 +60,7 @@ public class BookController {
     }
 
     @PutMapping(value = "/exclude", produces = "text/plain")
-    public ResponseEntity<String> excludeBook(@RequestParam(value = "patrimonial_id") Long id) {
+    public ResponseEntity<String> excludeBook(@RequestParam(value = "id") Long id) {
         try {
             bookService.excludeBook(id);
             httpStatus = HttpStatus.OK;

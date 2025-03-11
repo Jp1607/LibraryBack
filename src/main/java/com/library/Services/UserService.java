@@ -18,11 +18,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getuserList(){
-    return userRepository.findAll();
-}
+    public List<User> getuserList() {
+        return userRepository.findAll();
+    }
 
-public User getUser(Long id){
-    return userRepository.findById(id).orElseThrow(NoSuchElementException::new);
-}
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    public User getUserByCred(String username, String password) {
+        return userRepository.findByNameAndPassword(username, password);
+    }
 }

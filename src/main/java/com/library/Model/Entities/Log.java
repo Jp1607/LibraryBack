@@ -28,7 +28,7 @@ public class Log {
     private LocalDateTime date;
 
     @Column(name = "activity")
-    private Activity activity;
+    private String activity;
 
     @Column(name = "table_name")
     private String tableName;
@@ -36,7 +36,7 @@ public class Log {
     @Column(name = "table_id")
     private Long tableId;
 
-    public Log(User user, Student student, Book book, LocalDateTime date, Activity activity, String tableName, Long tableId) {
+    public Log(User user, Student student, Book book, LocalDateTime date, String activity, String tableName, Long tableId) {
         this.user = user;
         this.student = student;
         this.book = book;
@@ -102,11 +102,25 @@ public class Log {
         this.date = date;
     }
 
-    public Activity getActivity() {
+    public String getActivity() {
         return activity;
     }
 
     public void setActivity(Activity activity) {
-        this.activity = activity;
+        this.activity = activity.getDescription();
+    }
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id=" + id +
+                ", user=" + user +
+                ", student=" + student +
+                ", book=" + book +
+                ", date=" + date +
+                ", activity='" + activity + '\'' +
+                ", tableName='" + tableName + '\'' +
+                ", tableId=" + tableId +
+                '}';
     }
 }
