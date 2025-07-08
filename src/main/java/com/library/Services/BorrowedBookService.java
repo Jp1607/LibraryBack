@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BorrowedBookService {
 
+    @Autowired
     ObjectMapper objectMapper;
 
     BorrowedBookRepository borrowedBookRepository;
@@ -44,11 +44,27 @@ public class BorrowedBookService {
     }
 
     public String getStringfiedBookList() throws JsonProcessingException {
-        return objectMapper.writeValueAsString(borrowedBookRepository.findAll());
+        List<BorrowedBook> borrowedBookList = borrowedBookRepository.findAll();
+        List<Map<String, String>> formattedBookList = new ArrayList<>();
+        for (BorrowedBook borrowedBook : borrowedBookList) {
+            Map<String, String> map = new HashMap<>();
+            map.put("id", borrowedBook.getId().toString());
+            map.put("book", borrowedBook.getBook().getTitle());
+            map.put("student", borrowedBook.getStudent().getName());
+            map.put("date", borrowedBook.getBorrowDate().toString());
+            System.out.println(map);
+            formattedBookList.add(map);
+        }
+
+        return objectMapper.writeValueAsString(formattedBookList);
     }
 
     public Optional<BorrowedBook> getBorrowedBook(Long bookId, Long studentId) throws JsonProcessingException {
         return borrowedBookRepository.findByStudentIdAndBookId(studentId, bookId);
+    }
+
+    public String getBorrowedBookById(Long bookId) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(borrowedBookRepository.findById(bookId));
     }
 
     public String borrowedBookAction(Long bookId, Long studentId) throws JsonProcessingException {

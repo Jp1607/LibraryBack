@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/books")
 public class BookController {
 
@@ -18,11 +19,14 @@ public class BookController {
     BookService bookService;
 
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> getBooks(@RequestParam(value = "title", required = false) String title) {
+    public ResponseEntity<String> getBooks(@RequestParam(value = "title", required = false) String title,
+                                           @RequestParam(value = "id", required = false) Long id) {
         try {
             String booksList;
             if (title != null) {
                 booksList = bookService.getBookByTitle(title);
+            } else if (id != null){
+                booksList = bookService.getStringfiedBookById(id);
             } else {
                 booksList = bookService.getAll();
             }

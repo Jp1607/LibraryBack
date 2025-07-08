@@ -31,7 +31,7 @@ public class BookService {
 
     public String getBookByTitle(String title) {
         try {
-            List<Book> bookList = bookRepository.findByTitle(title);
+            List<Book> bookList = bookRepository.findByTitleContaining(title);
             bookList = bookList.stream().filter(book -> !book.getExcluded()).toList();
             return objectMapper.writeValueAsString(bookList);
         } catch (Exception e) {
@@ -39,6 +39,22 @@ public class BookService {
         }
     }
 
+    public Book getBookById(Long id) {
+        try {
+            return bookRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public String getStringfiedBookById(Long id) {
+        try {
+            Book book =  bookRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            return objectMapper.writeValueAsString(book);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
     public String getAll() throws JsonProcessingException {
         return objectMapper.writeValueAsString(bookRepository.findAll());
     }
@@ -48,9 +64,6 @@ public class BookService {
         return bookRepository.findByPatrimonialId(id);
     }
 
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id).orElseThrow(NoSuchElementException::new);
-    }
 
     public void addBook(BookDTO bookDTO) {
         Book book = new Book(bookDTO);

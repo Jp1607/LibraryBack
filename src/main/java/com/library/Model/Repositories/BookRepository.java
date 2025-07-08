@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public @Repository interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByTitle(String title);
+    List<Book> findByTitleContaining(String title);
     Book findByPatrimonialId(Long id);
 }

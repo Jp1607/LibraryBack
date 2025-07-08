@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 //Controller da entrada/empréstimo
 //e saída/devolução de livros.
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "flow")
 public class BookFlowController {
 
@@ -24,9 +25,14 @@ public class BookFlowController {
     //Retorna uma lista do histórico de movimentação
     //Will accept sorting in future
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> getBookFlowList() {
+    public ResponseEntity<String> getBookFlowList(@RequestParam(value = "id", required = false) Long id) {
         try {
+            if(id != null){
+               body = borrowedBookService.getBorrowedBookById(id);
+                return ResponseEntity.status(httpStatus).body(body);
+            }
             body = borrowedBookService.getStringfiedBookList();
+            System.out.println(body);
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
