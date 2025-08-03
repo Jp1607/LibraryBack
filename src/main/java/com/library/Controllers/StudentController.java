@@ -24,7 +24,7 @@ public class StudentController {
     String tableName = "students";
 
     @GetMapping("")
-    public ResponseEntity<String> getstudents(@RequestParam(required = false) Long id) {
+    public ResponseEntity<String> getStudents(@RequestParam(required = false) Long id) {
 
         try {
             if (id == null) {
