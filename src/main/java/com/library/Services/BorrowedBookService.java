@@ -69,7 +69,7 @@ public class BorrowedBookService {
 
     public String borrowedBookAction(Long bookId, Long studentId) throws JsonProcessingException {
         User user = userService.getUserByCred("admin", "123456");
-        Book book = bookService.getBookById(bookId);
+        Book book = bookService.getBookById(bookId).getRows().get(0);
         Student student = studentService.getById(studentId);
         LocalDateTime localDateTime = dateService.getCurrentDate();
         if (getBorrowedBook(bookId, studentId).isPresent()) {

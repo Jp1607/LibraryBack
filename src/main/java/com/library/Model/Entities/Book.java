@@ -67,11 +67,11 @@ public class Book {
         isExcluded = excluded;
     }
 
-    public Boolean getAvailable() {
+    public Boolean getIsAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(Boolean available) {
+    public void setIsAvailable(Boolean available) {
         isAvailable = available;
     }
 

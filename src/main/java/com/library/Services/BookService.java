@@ -1,19 +1,23 @@
 package com.library.Services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.library.Model.DTO.ApiDataResponse;
 import com.library.Model.DTO.BookDTO;
+import com.library.Model.DTO.Pagination;
 import com.library.Model.Enums.Activity;
 import com.library.Model.Entities.Book;
 import com.library.Model.Repositories.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -32,18 +36,22 @@ public class BookService {
             this.dateService = dateService;
       }
 
-      public String getBookByTitle(String title, int page) {
+      public ApiDataResponse<Book> getBookByTitle(String title, int pageNumber) {
             try {
-                  List<Book> bookList = bookRepository.findByTitleContaining(title, pageable.withPage(page)).stream().filter(book -> !book.getExcluded()).toList();
-                  return objectMapper.writeValueAsString(bookList);
+                  Page<Book> page = bookRepository.findByTitleContaining(title, pageable.withPage(pageNumber));
+                  List<Book> bookList = page.getContent();
+                  Pagination pagination = new Pagination(pageNumber, (int) page.getTotalElements());
+                  return new ApiDataResponse<Book>(bookList, pagination);
             } catch (Exception e) {
-                  return e.getMessage();
+                  throw e;
             }
       }
 
-      public Book getBookById(Long id) {
+      public ApiDataResponse<Book> getBookById(Long id) {
             try {
-                  return bookRepository.findById(id).orElseThrow(NoSuchElementException::new);
+                  Book book = bookRepository.findById(id).orElseThrow();
+                  Pagination pagination = new Pagination(0, 1);
+                  return new ApiDataResponse<Book>(Collections.singletonList(book), pagination);
             } catch (Exception e) {
                   throw e;
             }
@@ -58,8 +66,11 @@ public class BookService {
             }
       }
 
-      public String getAll(int page) throws JsonProcessingException {
-            return objectMapper.writeValueAsString(bookRepository.findAll(pageable.withPage(page)).getContent());
+      public ApiDataResponse<Book> getAll(int pageNumber) throws JsonProcessingException {
+            Page<Book> page = bookRepository.findAll(pageable.withPage(pageNumber));
+            List<Book> bookList = page.getContent();
+            Pagination pagination = new Pagination(pageNumber, (int) page.getTotalElements());
+            return new ApiDataResponse<Book>(bookList, pagination);
       }
 
       //Should have error handling
@@ -87,12 +98,20 @@ public class BookService {
       }
 
       public void markAsBorrowed(Book book) {
-            book.setAvailable(false);
+            book.setIsAvailable(false);
             bookRepository.save(book);
       }
 
       public void markAsReturned(Book book) {
-            book.setAvailable(true);
+            book.setIsAvailable(true);
             bookRepository.save(book);
+      }
+
+      public <T> String stringfy(T object) {
+            try {
+            return objectMapper.writeValueAsString(object);
+            } catch (JsonProcessingException e) {
+                  throw new RuntimeException(e);
+            }
       }
 }

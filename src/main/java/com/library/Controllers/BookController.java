@@ -1,12 +1,18 @@
 package com.library.Controllers;
 
+import com.library.Model.DTO.ApiDataResponse;
 import com.library.Model.DTO.BookDTO;
+import com.library.Model.DTO.Pagination;
 import com.library.Services.BookService;
 import com.library.Model.Entities.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -25,16 +31,16 @@ public class BookController {
               @RequestParam(value = "page", defaultValue = "0", required = false) int page
       ) {
             try {
-                  String booksList;
+                  ApiDataResponse<Book> bookData;
                   if (title != null) {
-                        booksList = bookService.getBookByTitle(title, page);
+                        bookData = bookService.getBookByTitle(title, page);
                   } else if (id != null) {
-                        booksList = bookService.getStringfiedBookById(id);
+                        bookData = bookService.getBookById(id);
                   } else {
-                        booksList = bookService.getAll(page);
+                        bookData = bookService.getAll(page);
                   }
                   httpStatus = HttpStatus.OK;
-                  return ResponseEntity.status(httpStatus.value()).body(booksList);
+                  return ResponseEntity.status(httpStatus.value()).body(bookService.stringfy(bookData));
             } catch (Exception e) {
                   httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
                   return ResponseEntity.status(httpStatus.value()).body(e.getMessage());
