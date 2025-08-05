@@ -1,5 +1,7 @@
 package com.library.Services;
 
+import com.library.Model.DTO.ApiDataResponse;
+import com.library.Model.DTO.Pagination;
 import com.library.Model.Entities.Student;
 import com.library.Model.Enums.Activity;
 import com.library.Model.Repositories.StudentRepository;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -31,13 +34,14 @@ public class StudentService extends PersonService<Student>{
     }
 
     @Override
-    public Page<Student> getById(Long id) {
-        return studentRepository.findById(id, P).orElseThrow(NoSuchElementException::new);
+    public Student getById(Long id) {
+        return studentRepository.findById(id).orElseThrow();
     }
 
     @Override
-    protected Page<Student> getAll(int page) {
-        return studentRepository.findAll(pageable.withPage(page));
+    protected ApiDataResponse<Student> getAll(int page) {
+        Page<Student> students = studentRepository.findAll(pageable.withPage(page));
+        return new ApiDataResponse<Student>(students.getContent(), new Pagination(page, (int) students.getTotalElements()));
     }
 
     public String stringfiedList(int page) throws JsonProcessingException {
@@ -59,14 +63,14 @@ public class StudentService extends PersonService<Student>{
     }
 
     public void changeState(Long id) {
-        Student student = getById(id);
+        Student student = studentRepository.findById(id).orElseThrow();
         student.setActive(!student.getActive());
         logService.newLog(tableName, student.getId(), null, student, Activity.STATE);
         studentRepository.save(student);
     }
 
     public void exclude(Long id) {
-        Student student = getById(id);
+        Student student = studentRepository.findById(id).orElseThrow();
         student.setActive(false);
         logService.newLog(tableName, student.getId(), null, student, Activity.REMOVE);
         studentRepository.save(student);

@@ -1,5 +1,6 @@
 package com.library.Services;
 
+import com.library.Model.DTO.ApiDataResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.List;
 public abstract class PersonService<T> {
 
     protected abstract T getById(Long id);
-    protected abstract Page<T> getAll(int page);
+    protected abstract ApiDataResponse<T> getAll(int page);
 
     protected Object getPerson(Long id, int page) {
         if (id == null) {

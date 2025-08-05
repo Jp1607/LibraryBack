@@ -32,7 +32,6 @@ public class BookFlowController {
                 return ResponseEntity.status(httpStatus).body(body);
             }
             body = borrowedBookService.getStringfiedBookList();
-            System.out.println(body);
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
