@@ -1,15 +1,19 @@
 package com.library.Services;
 
+import com.library.Model.DTO.ApiDataResponse;
+import com.library.Model.DTO.Pagination;
 import com.library.Model.Entities.Book;
 import com.library.Model.Entities.BorrowedBook;
 import com.library.Model.Entities.Student;
 import com.library.Model.Entities.User;
 import com.library.Model.Enums.Activity;
-import com.library.Model.Enums.BookFlowAction;
 import com.library.Model.Repositories.BorrowedBookRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +31,7 @@ public class BorrowedBookService {
     LogService logService;
     DateService dateService;
     UserService userService;
+    Pageable pageable = PageRequest.of(0, 10);
 
     @Autowired
     public BorrowedBookService(BorrowedBookRepository borrowedBookRepository, BookService bookService, StudentService studentService, LogService logService, DateService dateService, UserService userService) {
@@ -39,32 +44,23 @@ public class BorrowedBookService {
     }
 
     //Will implement sorting
-    public List<BorrowedBook> getBorrowedBookList() {
-        return borrowedBookRepository.findAll();
+    public ApiDataResponse<BorrowedBook> getBorrowedBookList(int page) {
+        Page<BorrowedBook> borrowedBooks = borrowedBookRepository.findAll(pageable);
+        Pagination pagination = new Pagination(page, (int) borrowedBooks.getTotalElements());
+        return new ApiDataResponse<BorrowedBook>(borrowedBooks.getContent(), pagination);
     }
 
-    public String getStringfiedBookList() throws JsonProcessingException {
-        List<BorrowedBook> borrowedBookList = borrowedBookRepository.findAll();
-        List<Map<String, String>> formattedBookList = new ArrayList<>();
-        for (BorrowedBook borrowedBook : borrowedBookList) {
-            Map<String, String> map = new HashMap<>();
-            map.put("id", borrowedBook.getId().toString());
-            map.put("book", borrowedBook.getBook().getTitle());
-            map.put("student", borrowedBook.getStudent().getName());
-            map.put("date", borrowedBook.getBorrowDate().toString());
-            System.out.println(map);
-            formattedBookList.add(map);
-        }
-
-        return objectMapper.writeValueAsString(formattedBookList);
+    public String stringBookList(ApiDataResponse<BorrowedBook> borrowedBookApiDataResponse) throws JsonProcessingException {
+                return objectMapper.writeValueAsString(borrowedBookApiDataResponse);
     }
 
     public Optional<BorrowedBook> getBorrowedBook(Long bookId, Long studentId) throws JsonProcessingException {
         return borrowedBookRepository.findByStudentIdAndBookId(studentId, bookId);
     }
 
-    public String getBorrowedBookById(Long bookId) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(borrowedBookRepository.findById(bookId));
+    public ApiDataResponse<BorrowedBook> getBorrowedBookById(Long bookId) throws JsonProcessingException {
+        Pagination pagination = new Pagination(0, 1);
+        return new ApiDataResponse<BorrowedBook>(Collections.singletonList(borrowedBookRepository.findById(bookId).orElseThrow()), pagination);
     }
 
     public String borrowedBookAction(Long bookId, Long studentId) throws JsonProcessingException {

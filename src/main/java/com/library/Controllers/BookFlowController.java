@@ -25,13 +25,15 @@ public class BookFlowController {
     //Retorna uma lista do histórico de movimentação
     //Will accept sorting in future
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> getBookFlowList(@RequestParam(value = "id", required = false) Long id) {
+    public ResponseEntity<String> getBookFlowList(@RequestParam(value = "id", required = false) Long id,
+    @RequestParam(value = "page", defaultValue = "0") int page
+    ) {
         try {
             if(id != null){
-               body = borrowedBookService.getBorrowedBookById(id);
+               body = borrowedBookService.stringBookList(borrowedBookService.getBorrowedBookById(id));
                 return ResponseEntity.status(httpStatus).body(body);
             }
-            body = borrowedBookService.getStringfiedBookList();
+            body = borrowedBookService.stringBookList(borrowedBookService.getBorrowedBookList(page));
             return ResponseEntity.status(httpStatus).body(body);
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
